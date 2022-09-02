@@ -9,9 +9,22 @@ struct Args {
 #[derive(clap::Subcommand, Debug)]
 enum Action {
    Add,
-   Play,
+   #[clap(subcommand)]
+   Play(Play),
    Find,
    Sync
+}
+
+#[derive(clap::Subcommand, Debug)]
+enum Play {
+    Title {
+        #[clap(value_parser)]
+        title: String,
+    },
+    Tags {
+        #[clap(value_parser)]
+        tags: Vec<String>,
+    }
 }
 
 fn main() {
