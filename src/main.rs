@@ -20,11 +20,9 @@ enum Action {
 #[derive(clap::Subcommand, Debug)]
 enum Play {
     Title {
-        #[clap(value_parser)]
         title: String,
     },
     Tags {
-        #[clap(value_parser)]
         tags: Vec<String>,
     }
 }
