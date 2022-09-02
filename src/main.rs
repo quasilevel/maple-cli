@@ -1,5 +1,10 @@
 use clap::Parser;
 
+mod add;
+mod play;
+mod find;
+mod sync;
+
 #[derive(clap::Parser)]
 struct Args {
    #[clap(subcommand)]
@@ -10,21 +15,11 @@ struct Args {
 enum Action {
    Add,
    #[clap(subcommand)]
-   Play(Play),
+   Play(play::Play),
    Find {
        terms: Vec<String>,
    },
    Sync
-}
-
-#[derive(clap::Subcommand, Debug)]
-enum Play {
-    Title {
-        title: String,
-    },
-    Tags {
-        tags: Vec<String>,
-    }
 }
 
 fn main() {
