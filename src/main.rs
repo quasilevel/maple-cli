@@ -11,7 +11,9 @@ enum Action {
    Add,
    #[clap(subcommand)]
    Play(Play),
-   Find,
+   Find {
+       terms: Vec<String>,
+   },
    Sync
 }
 
