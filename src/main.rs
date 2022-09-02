@@ -27,11 +27,11 @@ fn main() -> Result<(), Box<dyn Error>> {
     let args = Args::parse();
 
     match args.action {
-        Action::Add => println!("Add unimplemented"),
+        Action::Add => add::add(),
         Action::Play(_) => panic!("Play unimplemented"),
         Action::Find { terms: _ } => panic!("Find unimplemented"),
         Action::Sync => panic!("Sync unimplemented"),
-    };
+    }?;
 
     Ok(())
 }
