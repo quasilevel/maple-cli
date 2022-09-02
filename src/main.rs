@@ -1,4 +1,5 @@
 use clap::Parser;
+use std::error::Error;
 
 mod add;
 mod play;
@@ -22,8 +23,15 @@ enum Action {
    Sync
 }
 
-fn main() {
+fn main() -> Result<(), Box<dyn Error>> {
     let args = Args::parse();
 
-    println!("{:?} selected", args.action);
+    match args.action {
+        Action::Add => println!("Add unimplemented"),
+        Action::Play(_) => panic!("Play unimplemented"),
+        Action::Find { terms: _ } => panic!("Find unimplemented"),
+        Action::Sync => panic!("Sync unimplemented"),
+    };
+
+    Ok(())
 }
