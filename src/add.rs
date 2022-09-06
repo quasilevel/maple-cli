@@ -2,6 +2,10 @@ use std::error::Error;
 use inquire::{Text, CustomType, Editor, Select};
 use url::Url;
 
+const ADD_TAGS: &str = "Add tags";
+const REMOVE_TAGS: &str = "Remove tags";
+const DONE: &str = "Done";
+
 pub fn add() -> Result<(), Box<dyn Error>> {
     let name = Text::new("Name:").prompt()?;
     let url = CustomType::<Url>::new("Url:").prompt()?;
@@ -15,10 +19,18 @@ fn input_tags() -> Result<Vec<String>, Box<dyn Error>> {
     let mut tags: Vec<String> = Vec::new();
     add_tags(&mut tags)?;
 
-    let options: Vec<&str> = vec!["remove tag(s)", "add tag(s)", "done"];
-    let opt = Select::new("Choose an option", options).prompt()?;
+    loop {
+        let options: Vec<&str> = vec![ADD_TAGS, REMOVE_TAGS, DONE];
+        let opt = Select::new("Choose an option", options).prompt()?;
 
-    println!("{}", opt);
+        if opt == ADD_TAGS {
+            add_tags(&mut tags)?;
+        } else if opt == REMOVE_TAGS {
+            break;
+        } else {
+            break
+        }
+    }
 
     Ok(tags)
 }
