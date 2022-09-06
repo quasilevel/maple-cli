@@ -1,5 +1,5 @@
 use std::error::Error;
-use inquire::{Text, CustomType, Editor, Select};
+use inquire::{Text, CustomType, Editor, Select, MultiSelect};
 use url::Url;
 
 const ADD_TAGS: &str = "Add tags";
@@ -26,7 +26,7 @@ fn input_tags() -> Result<Vec<String>, Box<dyn Error>> {
         if opt == ADD_TAGS {
             add_tags(&mut tags)?;
         } else if opt == REMOVE_TAGS {
-            break;
+            remove_tags(&mut tags)?;
         } else {
             break
         }
@@ -43,5 +43,11 @@ fn add_tags(tags: &mut Vec<String>) -> Result<(), Box<dyn Error>> {
         }
         tags.push(val)
     }
+    Ok(())
+}
+
+fn remove_tags(tags: &mut Vec<String>) -> Result<(), Box<dyn Error>> {
+    let removed = MultiSelect::new("Choose tags to remove:", tags.to_owned()).prompt()?;
+    tags.retain(|tag| !removed.contains(tag));
     Ok(())
 }
