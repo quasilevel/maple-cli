@@ -39,11 +39,11 @@ fn add_tags(tags: &mut Vec<String>, suggestions: &[&str]) -> Result<(), Box<dyn 
     let suggester = |input: &str| -> Result<Vec<String>, inquire::CustomUserError> {
         let list: Vec<&str> = input.split(',').map(|x| x.trim()).collect();
         let (last, rest_vec) = list.split_last().unwrap_or((&"", &[""]));
-        let mut rest = rest_vec.join(", ");
-
-        if !rest.is_empty() {
-            rest += ", ";
-        }
+        let rest = rest_vec.join(", ");
+        let rest = match !rest.is_empty() {
+            true => format!("{}, ", rest),
+            false => rest,
+        };
 
         Ok(suggestions.iter()
             .filter(|&val| !rest_vec.contains(val) && val.contains(&last.to_ascii_lowercase()))
