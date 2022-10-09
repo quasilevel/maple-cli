@@ -9,3 +9,10 @@ edition = "2021"
 clap = { version = "3.2.20", features = ["derive"] }
 inquire = { version = "0.3.0", features = ["editor"]}
 url = "2.2.2"
+
+[dev-dependencies]
+criterion = { version = "0.3", features = ["html_reports"]}
+
+[[bench]]
+name = "persistence_bench"
+harness = false
