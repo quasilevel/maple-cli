@@ -2,25 +2,26 @@ use clap::Parser;
 use std::error::Error;
 
 mod add;
-mod play;
 mod find;
+mod persistence;
+mod play;
 mod sync;
 
 #[derive(clap::Parser)]
 struct Args {
-   #[clap(subcommand)]
-   action: Action,
+    #[clap(subcommand)]
+    action: Action,
 }
 
 #[derive(clap::Subcommand, Debug)]
 enum Action {
-   Add,
-   #[clap(subcommand)]
-   Play(play::Play),
-   Find {
-       terms: Vec<String>,
-   },
-   Sync
+    Add,
+    #[clap(subcommand)]
+    Play(play::Play),
+    Find {
+        terms: Vec<String>,
+    },
+    Sync,
 }
 
 fn main() -> Result<(), Box<dyn Error>> {

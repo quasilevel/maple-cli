@@ -8,6 +8,7 @@ edition = "2021"
 [dependencies]
 clap = { version = "3.2.20", features = ["derive"] }
 inquire = { version = "0.3.0", features = ["editor"]}
+serde = { version = "1.0.145", features = ["serde_derive"] }
 url = "2.2.2"
 
 [dev-dependencies]
