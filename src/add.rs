@@ -1,17 +1,36 @@
 use inquire::{CustomType, Editor, MultiSelect, Select, Text};
-use std::error::Error;
+use std::{error::Error, fs::File};
 use url::Url;
+
+use crate::persistence::{json::JsonStorage, Storage};
 
 const ADD_TAGS: &str = "Add tags";
 const REMOVE_TAGS: &str = "Remove tags";
 const DONE: &str = "Done";
 
 pub fn add() -> Result<(), Box<dyn Error>> {
+    let mut file = File::options()
+        .read(true)
+        .write(true)
+        .create(true)
+        .open("data.json")?;
+    let mut storage = JsonStorage::open(&mut file).unwrap_or_default();
+
     let url = CustomType::<Url>::new("Url:").prompt()?;
     let name = Text::new("Name:").prompt()?;
     let description = Editor::new("Description:").prompt()?;
     let tags = input_tags(&["jazz", "english", "japanese"])?;
-    println!("{} {} {} {:?}", name, url, description, tags);
+
+    storage.add(crate::persistence::MusicInput {
+        url: url.into(),
+        name,
+        description,
+        tags,
+    })?;
+
+    file.set_len(0)?;
+    storage.store(&mut file)?;
+
     Ok(())
 }
 

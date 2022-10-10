@@ -15,7 +15,7 @@ pub trait Music {
     fn added_on(&self) -> i64;
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Clone)]
 pub struct MusicData {
     id: String,
     url: String,
@@ -59,5 +59,5 @@ pub struct MusicInput {
 }
 
 pub trait Storage<M: Music> {
-    fn add(&self, input: MusicInput) -> Result<M, Box<dyn Error>>;
+    fn add(&mut self, input: MusicInput) -> Result<M, Box<dyn Error>>;
 }
