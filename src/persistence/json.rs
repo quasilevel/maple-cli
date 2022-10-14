@@ -15,7 +15,7 @@ impl JsonStorage {
     }
 
     pub fn store(&self, dest: &mut impl Write) -> Result<(), Box<dyn std::error::Error>> {
-        serde_json::to_writer(dest, &self.music_list)?;
+        serde_json::to_writer_pretty(dest, &self.music_list)?;
         Ok(())
     }
 }
@@ -36,7 +36,18 @@ impl Storage<MusicData> for JsonStorage {
     }
 
     fn get_tags(&self) -> super::Result<Vec<super::Tag>> {
-        todo!()
+        let all = self.music_list.iter().flat_map(|music| music.tags.iter());
+        let mut vec = match all.size_hint() {
+            (_, Some(size)) | (size, None) => Vec::with_capacity(size),
+        };
+
+        for tag in all {
+            if !vec.contains(tag) {
+                vec.push(tag.to_owned())
+            }
+        }
+
+        Ok(vec)
     }
 
     fn search_with_tags(&self, tags: &[super::Tag]) -> super::Result<Vec<MusicData>> {
