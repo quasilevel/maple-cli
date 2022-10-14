@@ -21,7 +21,7 @@ impl JsonStorage {
 }
 
 impl Storage<MusicData> for JsonStorage {
-    fn add(&mut self, input: super::MusicInput) -> Result<MusicData, Box<dyn std::error::Error>> {
+    fn add(&mut self, input: super::MusicInput) -> super::Result<MusicData> {
         let data = MusicData {
             id: Uuid::new_v4().to_string(),
             url: input.url,
@@ -33,5 +33,29 @@ impl Storage<MusicData> for JsonStorage {
 
         self.music_list.push(data.clone());
         Ok(data)
+    }
+
+    fn get_tags(&self) -> super::Result<Vec<super::Tag>> {
+        todo!()
+    }
+
+    fn search_with_tags(&self, tags: &[super::Tag]) -> super::Result<Vec<MusicData>> {
+        todo!()
+    }
+
+    fn fuzzy_search(&self, search: &str) -> super::Result<Vec<MusicData>> {
+        todo!()
+    }
+
+    fn get(&self, id: &str) -> super::Result<Option<MusicData>> {
+        todo!()
+    }
+
+    fn update(&mut self, id: &str, input: super::MusicUpdate) -> super::Result<()> {
+        todo!()
+    }
+
+    fn delete(&mut self, id: &str) -> super::Result<()> {
+        todo!()
     }
 }
