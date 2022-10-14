@@ -9,17 +9,17 @@ const REMOVE_TAGS: &str = "Remove tags";
 const DONE: &str = "Done";
 
 pub fn add() -> Result<(), Box<dyn Error>> {
-    let mut file = File::options()
-        .read(true)
-        .write(true)
-        .create(true)
-        .open("data.json")?;
-    let mut storage = JsonStorage::open(&mut file).unwrap_or_default();
+    let mut storage = match File::open("data.json") {
+        Ok(mut file) => JsonStorage::open(&mut file).unwrap_or_default(),
+        Err(_) => JsonStorage::default(),
+    };
+    let suggestion = storage.get_tags()?;
+    let suggestion = suggestion.iter().map(|s| s.as_str()).collect::<Vec<&str>>();
 
     let url = CustomType::<Url>::new("Url:").prompt()?;
     let name = Text::new("Name:").prompt()?;
     let description = Editor::new("Description:").prompt()?;
-    let tags = input_tags(&["jazz", "english", "japanese"])?;
+    let tags = input_tags(suggestion.as_slice())?;
 
     storage.add(crate::persistence::MusicInput {
         url: url.into(),
@@ -28,7 +28,11 @@ pub fn add() -> Result<(), Box<dyn Error>> {
         tags,
     })?;
 
-    file.set_len(0)?;
+    let mut file = File::options()
+        .write(true)
+        .create(true)
+        .truncate(true)
+        .open("data.json")?;
     storage.store(&mut file)?;
 
     Ok(())
