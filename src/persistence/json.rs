@@ -20,6 +20,12 @@ impl JsonStorage {
     }
 }
 
+fn has_all(outter: &Vec<String>, inner: &[String]) -> bool {
+    inner
+        .iter()
+        .fold(true, |acc, item| acc && outter.contains(item))
+}
+
 impl Storage<MusicData> for JsonStorage {
     fn add(&mut self, input: super::MusicInput) -> super::Result<MusicData> {
         let data = MusicData {
@@ -51,7 +57,12 @@ impl Storage<MusicData> for JsonStorage {
     }
 
     fn search_with_tags(&self, tags: &[super::Tag]) -> super::Result<Vec<MusicData>> {
-        todo!()
+        Ok(self
+            .music_list
+            .iter()
+            .filter(|music| has_all(&music.tags, tags))
+            .map(|music| music.to_owned())
+            .collect())
     }
 
     fn fuzzy_search(&self, search: &str) -> super::Result<Vec<MusicData>> {
@@ -59,7 +70,11 @@ impl Storage<MusicData> for JsonStorage {
     }
 
     fn get(&self, id: &str) -> super::Result<Option<MusicData>> {
-        todo!()
+        Ok(self
+            .music_list
+            .iter()
+            .find(|music| music.id == id)
+            .and_then(|val| Some(val.to_owned())))
     }
 
     fn update(&mut self, id: &str, input: super::MusicUpdate) -> super::Result<()> {
