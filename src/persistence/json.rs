@@ -82,6 +82,13 @@ impl Storage<MusicData> for JsonStorage {
     }
 
     fn delete(&mut self, id: &str) -> super::Result<()> {
-        todo!()
+        let idx = match self.music_list.iter().position(|music| music.id == id) {
+            Some(idx) => idx,
+            None => return Err("element not found".into()),
+        };
+
+        self.music_list.swap_remove(idx);
+
+        Ok(())
     }
 }
