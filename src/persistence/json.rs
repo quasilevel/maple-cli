@@ -1,3 +1,4 @@
+use fuzzy_matcher::{skim::SkimMatcherV2, FuzzyMatcher};
 use std::io::{Read, Write};
 use uuid::Uuid;
 
@@ -66,7 +67,29 @@ impl Storage<MusicData> for JsonStorage {
     }
 
     fn fuzzy_search(&self, search: &str) -> super::Result<Vec<MusicData>> {
-        todo!()
+        let matcher = SkimMatcherV2::default().smart_case().use_cache(true);
+        let mut weights = self
+            .music_list
+            .iter()
+            .map(|music| {
+                let weight = matcher.fuzzy_match(music.url.as_str(), search).unwrap_or(0)
+                    + matcher
+                        .fuzzy_match(music.name.as_str(), search)
+                        .unwrap_or(0)
+                    + matcher
+                        .fuzzy_match(music.description.as_str(), search)
+                        .unwrap_or(0);
+                (music, weight)
+            })
+            .collect::<Vec<_>>();
+
+        weights.sort_by(|(_, a), (_, b)| a.cmp(b));
+
+        Ok(weights
+            .into_iter()
+            .take(5)
+            .map(|(music, _weight)| music.to_owned())
+            .collect())
     }
 
     fn get(&self, id: &str) -> super::Result<Option<MusicData>> {
