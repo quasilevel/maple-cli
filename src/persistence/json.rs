@@ -81,6 +81,7 @@ impl Storage<MusicData> for JsonStorage {
                         .unwrap_or(0);
                 (music, weight)
             })
+            .filter(|(_, weight)| *weight != 0)
             .collect::<Vec<_>>();
 
         weights.sort_by(|(_, a), (_, b)| a.cmp(b));
