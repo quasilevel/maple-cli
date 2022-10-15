@@ -78,7 +78,28 @@ impl Storage<MusicData> for JsonStorage {
     }
 
     fn update(&mut self, id: &str, input: super::MusicUpdate) -> super::Result<()> {
-        todo!()
+        let music_data = match self.music_list.iter_mut().find(|music| music.id == id) {
+            Some(data) => data,
+            None => return Err("Music not found".into()),
+        };
+
+        if let Some(url) = input.url {
+            music_data.url = url;
+        }
+
+        if let Some(name) = input.name {
+            music_data.name = name;
+        }
+
+        if let Some(description) = input.description {
+            music_data.description = description;
+        }
+
+        if let Some(tags) = input.tags {
+            music_data.tags = tags;
+        }
+
+        Ok(())
     }
 
     fn delete(&mut self, id: &str) -> super::Result<()> {
