@@ -5,6 +5,7 @@ mod add;
 mod find;
 mod persistence;
 mod play;
+mod player;
 mod sync;
 
 #[derive(clap::Parser)]
