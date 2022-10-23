@@ -39,5 +39,6 @@ impl super::Player for RawPlayer {
         // proxy.call_noreply("TrackAdd", zbus::zvariant);
 
         // super::Result::Ok(())
+        unimplemented!("queueing is not implemented in the player yet")
     }
 }
