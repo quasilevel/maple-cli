@@ -30,7 +30,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     match args.action {
         Action::Add => add::add(),
-        Action::Play(_) => panic!("Play unimplemented"),
+        Action::Play(arg) => play::play(arg),
         Action::Find { terms } => find::find_by_terms(terms),
         Action::Sync => panic!("Sync unimplemented"),
     }?;
